@@ -1,0 +1,190 @@
+import mysql.connector
+from mysql.connector import Error
+
+def conectar_banco():
+    """Faz a ponte entre o Python e o MySQL"""
+    try:
+        conexao = mysql.connector.connect(
+            host='localhost',
+            database='ATELIE',
+            user='root',
+            password='12345678'
+        )
+        return conexao
+    except Error as erro:
+        print(f"Erro ao conectar ao banco: {erro}")
+        return None
+ 
+print("\n--- Bem Vindo ao Ateliê Balão Mágico ---")
+
+class Cliente:
+    def __init__(self, nome, telefone, email):
+        self.nome = nome
+        self.telefone = telefone
+        self.email = email
+
+class Pedido:
+    def __init__(self, cliente, data_festa, data_entrega):
+        self.cliente = cliente
+        self.data_festa = data_festa
+        self.data_entrega = data_entrega
+        self.status = "Orçamento" 
+        
+        # Valores padrão
+        self.tema = "Não definido"
+        self.cores = "Não definido"
+        self.nome_do_aniversariante = "Não definido"
+        self.idade = 0
+        self.tamanho_do_bolo = 0.0
+
+    def definir_personalizacao(self, tema, cores, nome, idade, tamanho):
+        self.tema = tema
+        self.cores = cores
+        self.nome_do_aniversariante = nome
+        self.idade = idade
+        self.tamanho_do_bolo = tamanho
+
+    def exibir_info(self):
+        print(f"\n--- Resumo do Pedido ---")
+        print(f"Cliente: {self.cliente.nome} | Fone: {self.cliente.telefone} | Email: {self.cliente.email}")
+        print(f"Data da Festa: {self.data_festa} | Entrega: {self.data_entrega}")
+        print(f"Tema: {self.tema}")
+        print(f"Cores: {self.cores}")
+        print(f"Nome do Aniversariante: {self.nome_do_aniversariante}")
+        print(f"Idade: {self.idade}")
+        print(f"Tamanho do bolo: {self.tamanho_do_bolo}")
+        print(f"Status atual: {self.status}")
+        print("------------------------\n")
+
+
+while True:
+    print("\n--- Menu do Ateliê ---")
+    print("1 - Novo Atendimento (Cliente + Pedido)")
+    print("2 - Consultar Histórico ")
+    print("3 - Sair")
+
+    escolha = input("Escolha uma Opção: ")
+
+    if escolha == "1":
+        print("\n--- 1. Cadastro de Cliente ---")
+        nome = input("Digite o Nome do cliente: ")
+        telefone = input("Insira o Telefone (WhatsApp): ")
+        email = input("Insira o Email: ")
+        
+        novo_cliente = Cliente(nome, telefone, email)
+        
+        conexao = conectar_banco()
+        id_cliente_gerado = None
+        
+        if conexao:
+            cursor = conexao.cursor()
+            try:
+                # 1. Inserir na tabela CLIENTES (apenas nome e email)
+                sql_cliente = "INSERT INTO CLIENTES (NOME, EMAIL) VALUES (%s, %s)"
+                cursor.execute(sql_cliente, (novo_cliente.nome, novo_cliente.email))
+                id_cliente_gerado = cursor.lastrowid 
+                
+                # 2. Inserir na tabela TELEFONE (usando o ID gerado acima)
+                # Vamos assumir 'CEL' como padrão para o WhatsApp
+                sql_telefone = "INSERT INTO TELEFONE (TIPO, NUMERO, ID_CLIENTE) VALUES (%s, %s, %s)"
+                cursor.execute(sql_telefone, ('CEL', novo_cliente.telefone, id_cliente_gerado))
+                
+                # Confirma ambas as inserções
+                conexao.commit()
+                print(f"-> Cliente {nome} e contacto guardados no banco de dados! (ID: {id_cliente_gerado})")
+                
+            except Error as e:
+                print(f"Erro ao guardar cliente: {e}")
+                conexao.rollback() 
+
+        avancar_pedido = input(f"\nDeseja já iniciar o pedido para {nome}? (S/N): ").strip().upper()
+        
+        if avancar_pedido == "S" and id_cliente_gerado is not None:
+            print("\n--- 2. Dados do Pedido ---")
+            data_festa = input("Qual a data da festa?: (Ano-Mês-Dia) ")
+            data_entrega = input("Qual a data de entrega?: (Ano-Mês-Dia)")
+            
+            novo_pedido = Pedido(novo_cliente, data_festa, data_entrega)
+            
+            avancar_personalizacao = input("\nDeseja preencher os detalhes do topo/artigo agora? (S/N): ").strip().upper()
+            
+            if avancar_personalizacao == "S":
+                print("\n--- 3. Personalização ---")
+                tema = input("Tema da festa: ")
+                cores = input("Cores principais: ")
+                nome_aniv = input("Nome do aniversariante: ")
+                idade = input("Idade: ")
+                tamanho = input("Tamanho/Aro do bolo: tamnho em cm ou aro (ex: 20cm ou 10Aro): ")
+                
+                novo_pedido.definir_personalizacao(tema, cores, nome_aniv, idade, tamanho)
+            
+            try:
+                sql_pedido = """INSERT INTO PEDIDOS 
+                                (DATA_FESTA, DATA_ENTREGA, STATUS, TEMA, CORES, NOME_ANIV, IDADE, TAMANHO_BOLO, ID_CLIENTE) 
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                
+                valores_pedido = (novo_pedido.data_festa, novo_pedido.data_entrega, novo_pedido.status, 
+                                  novo_pedido.tema, novo_pedido.cores, novo_pedido.nome_do_aniversariante, 
+                                  novo_pedido.idade, novo_pedido.tamanho_do_bolo, id_cliente_gerado)
+                                  
+                cursor.execute(sql_pedido, valores_pedido)
+                conexao.commit()
+                
+                print("\n-> Tudo pronto! Pedido guardado no MySQL com sucesso!")
+                novo_pedido.exibir_info()
+                
+            except Error as e:
+                print(f"Erro ao guardar pedido: {e}")
+            
+            finally:
+                if conexao.is_connected():
+                    cursor.close()
+                    conexao.close()
+        else:
+            print("-> Ok, a voltar ao menu.")
+            
+    
+
+    elif escolha == "2":
+        print("\n--- Histórico de Pedidos (Consultando MySQL) ---")
+        conexao = conectar_banco()
+        
+        if conexao:
+            cursor = conexao.cursor()
+            try:
+                
+                sql_busca = """SELECT C.NOME, T.NUMERO, C.EMAIL, 
+                                      P.DATA_FESTA, P.DATA_ENTREGA, P.STATUS, 
+                                      P.TEMA, P.CORES, P.NOME_ANIV, P.IDADE, P.TAMANHO_BOLO 
+                               FROM PEDIDOS P 
+                               INNER JOIN CLIENTES C ON C.IDCLIENTE = P.ID_CLIENTE
+                               LEFT JOIN TELEFONE T ON C.IDCLIENTE = T.ID_CLIENTE"""
+                               
+                cursor.execute(sql_busca)
+                resultados = cursor.fetchall()
+                
+                if not resultados:
+                    print("Nenhum pedido registado na base de dados.")
+                else:
+                    for linha in resultados:
+                        cliente_db = Cliente(linha[0], linha[1], linha[2])
+                        pedido_db = Pedido(cliente_db, linha[3], linha[4])
+                        pedido_db.status = linha[5]
+                        pedido_db.definir_personalizacao(linha[6], linha[7], linha[8], linha[9], linha[10])
+                        
+                        pedido_db.exibir_info()
+                        
+            except Error as e:
+                print(f"Erro ao procurar histórico: {e}")
+            finally:
+                cursor.close()
+                conexao.close()
+                
+    elif escolha == "4":
+        sair = input("\nDeseja realmente sair do sistema? (S/N): ").strip().upper()
+        if sair == "S":
+            print("A sair do sistema. Até logo!")
+            break
+        
+    else:
+        print("-> Opção inválida. Tente novamente.")
