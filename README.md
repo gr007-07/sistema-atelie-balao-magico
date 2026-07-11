@@ -6,7 +6,7 @@ Este projeto foi desenvolvido para modernizar o gerenciamento de clientes e pedi
 O projeto é dividido em duas partes independentes para atender diferentes necessidades do negócio:
 
 1. **Terminal Interno (CLI):** Um sistema rápido via terminal para uso no balcão da loja, focado no cadastro ágil de clientes e detalhamento de pedidos.
-2. **API Web (FastAPI):** Uma interface moderna e documentada, pronta para ser conectada ao site oficial da Criativa ou a um aplicativo de clientes.
+2. **API Web (FastAPI):** Uma interface moderna para uso local na máquina da loja.
 
 ## 🛠️ Tecnologias Utilizadas
 * **Linguagem:** Python
@@ -77,24 +77,7 @@ sistema-atelie-balao-magico/
     └── test_pedido.py
 ```
 
-## 🚢 Publicando a aplicação
-
-A aplicação está pronta para ser publicada em plataformas como:
-- **Render**: render.com (recomendado)
-- **PythonAnywhere**: pythonanywhere.com
-- **Railway**: railway.app
-- **DigitalOcean**: digitalocean.com
-
-### Passos para publicar no Render:
-1. Faça push do código para o GitHub
-2. Acesse render.com e conecte seu repositório
-3. Configure o comando de start:
-   ```
-   uvicorn api_atelie:app --host 0.0.0.0 --port $PORT
-   ```
-4. Deploy automático! 🎉
-
 ## 📝 Notas
 - O arquivo `requirements.txt` contém todas as dependências necessárias
-- Certifique-se de configurar a senha do operador em produção
-- Em produção, altere `secure=False` para `secure=True` na configuração de cookies (requer HTTPS)
+- A aplicação deve ser executada somente na máquina local, usando `127.0.0.1`
+- Não há configuração de link ou URL pública neste projeto
