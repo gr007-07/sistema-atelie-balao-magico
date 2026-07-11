@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acompanhar Pedido - Criativa</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>🔎 Acompanhe seu pedido</h1>
+      <p>Informe o número recebido após enviar seu pedido.</p>
+      <a class="secondary-link" href="/">← Fazer um pedido</a>
+    </section>
+
+    <section class="card acompanhamento-card">
+      <form id="form-acompanhar">
+        <label>Número do pedido
+          <input id="numero-pedido" type="number" min="1" required placeholder="Ex.: 12" />
+        </label>
+        <button type="submit">Consultar status</button>
+      </form>
+      <p id="resultado-status" class="resultado-status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script>
+    const parametros = new URLSearchParams(window.location.search);
+    const campoNumero = document.getElementById('numero-pedido');
+    const resultado = document.getElementById('resultado-status');
+
+    async function consultarStatus(event) {
+      if (event) event.preventDefault();
+      const id = campoNumero.value;
+      if (!id) return;
+
+      resultado.textContent = 'Consultando...';
+      try {
+        const resposta = await fetch(`/api/pedidos/${id}/status-publico`);
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.detail || 'Pedido não encontrado.');
+        resultado.textContent = `Pedido #${dados.id_pedido}: ${dados.status}`;
+      } catch (erro) {
+        resultado.textContent = `Não foi possível consultar: ${erro.message}`;
+      }
+    }
+
+    document.getElementById('form-acompanhar').addEventListener('submit', consultarStatus);
+    if (parametros.get('pedido')) {
+      campoNumero.value = parametros.get('pedido');
+      consultarStatus();
+    }
+  </script>
+</body>
+</html>

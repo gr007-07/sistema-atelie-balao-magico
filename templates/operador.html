@@ -60,6 +60,7 @@
             </select>
           </label>
           <button type="button" onclick="atualizarStatus(${pedido.id_pedido})">💾 Salvar Status</button>
+          <button type="button" class="danger-button" onclick="excluirPedido(${pedido.id_pedido})">🗑️ Excluir Pedido</button>
         </article>
       `).join('');
     }
@@ -79,6 +80,20 @@
         }
       } catch (erro) {
         alert('❌ Erro ao atualizar status: ' + erro.message);
+      }
+    }
+
+    async function excluirPedido(id) {
+      if (!confirm(`Excluir permanentemente o pedido #${id}?`)) return;
+
+      try {
+        const resposta = await fetch(`/api/pedidos/${id}`, { method: 'DELETE' });
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.detail || 'Não foi possível excluir o pedido.');
+        alert('✅ Pedido excluído com sucesso!');
+        carregarPedidos();
+      } catch (erro) {
+        alert('❌ Erro ao excluir pedido: ' + erro.message);
       }
     }
 

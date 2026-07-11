@@ -50,9 +50,19 @@ class AtualizacaoStatus(BaseModel):
     novo_status: str
 
 
+def verificar_operador(request: Request) -> None:
+    if request.cookies.get("operador_autenticado") != "true":
+        raise HTTPException(status_code=401, detail="Autenticação de operador necessária.")
+
+
 @app.get("/", response_class=HTMLResponse)
 async def pagina_cliente(request: Request):
     return templates.TemplateResponse(request, "index.html")
+
+
+@app.get("/acompanhar-pedido", response_class=HTMLResponse)
+async def pagina_acompanhar_pedido(request: Request):
+    return templates.TemplateResponse(request, "acompanhar_pedido.html")
 
 
 @app.get("/login", response_class=HTMLResponse)
@@ -201,7 +211,8 @@ async def receber_pedido_do_site(
 
 
 @app.get("/api/pedidos")
-def listar_todos_os_pedidos():
+def listar_todos_os_pedidos(request: Request):
+    verificar_operador(request)
     conexao = conectar_banco()
     if conexao:
         cursor = conexao.cursor()
@@ -246,8 +257,30 @@ def listar_todos_os_pedidos():
     return {"total_pedidos": len(pedidos_em_memoria), "pedidos": pedidos_em_memoria}
 
 
+@app.get("/api/pedidos/{id_pedido}/status-publico")
+def consultar_status_publico(id_pedido: int):
+    conexao = conectar_banco()
+    if conexao:
+        cursor = conexao.cursor()
+        try:
+            cursor.execute("SELECT ID_PEDIDOS, STATUS FROM PEDIDOS WHERE ID_PEDIDOS = %s", (id_pedido,))
+            pedido = cursor.fetchone()
+            if pedido:
+                return {"id_pedido": pedido[0], "status": pedido[1]}
+        finally:
+            cursor.close()
+            conexao.close()
+    else:
+        for pedido in pedidos_em_memoria:
+            if pedido["id_pedido"] == id_pedido:
+                return {"id_pedido": pedido["id_pedido"], "status": pedido["status"]}
+
+    raise HTTPException(status_code=404, detail="Pedido não encontrado.")
+
+
 @app.put("/api/pedidos/{id_pedido}/status")
-def atualizar_status_pedido(id_pedido: int, dados: AtualizacaoStatus):
+def atualizar_status_pedido(id_pedido: int, dados: AtualizacaoStatus, request: Request):
+    verificar_operador(request)
     conexao = conectar_banco()
     if conexao:
         cursor = conexao.cursor()
@@ -270,6 +303,35 @@ def atualizar_status_pedido(id_pedido: int, dados: AtualizacaoStatus):
         if pedido["id_pedido"] == id_pedido:
             pedido["status"] = dados.novo_status
             return {"sucesso": True, "mensagem": f"Pedido #{id_pedido} atualizado para: '{dados.novo_status}'."}
+
+    raise HTTPException(status_code=404, detail=f"Nenhum pedido encontrado com o ID {id_pedido}.")
+
+
+@app.delete("/api/pedidos/{id_pedido}")
+def excluir_pedido(id_pedido: int, request: Request):
+    verificar_operador(request)
+    conexao = conectar_banco()
+    if conexao:
+        cursor = conexao.cursor()
+        try:
+            cursor.execute("DELETE FROM PEDIDOS WHERE ID_PEDIDOS = %s", (id_pedido,))
+            conexao.commit()
+            if cursor.rowcount > 0:
+                return {"sucesso": True, "mensagem": f"Pedido #{id_pedido} excluído."}
+            raise HTTPException(status_code=404, detail=f"Nenhum pedido encontrado com o ID {id_pedido}.")
+        except HTTPException:
+            raise
+        except Exception as e:  # pragma: no cover - fallback genérico para o ambiente local
+            conexao.rollback()
+            raise HTTPException(status_code=400, detail=f"Erro ao excluir: {str(e)}") from e
+        finally:
+            cursor.close()
+            conexao.close()
+
+    for indice, pedido in enumerate(pedidos_em_memoria):
+        if pedido["id_pedido"] == id_pedido:
+            pedidos_em_memoria.pop(indice)
+            return {"sucesso": True, "mensagem": f"Pedido #{id_pedido} excluído."}
 
     raise HTTPException(status_code=404, detail=f"Nenhum pedido encontrado com o ID {id_pedido}.")
 

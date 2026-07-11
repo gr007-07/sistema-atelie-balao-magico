@@ -11,9 +11,10 @@
     <section class="hero">
       <h1>✨ Criativa - Loja dos Personalizados ✨</h1>
       <p>Crie o pedido perfeito para sua festa! Envie referências e detalhes para o nosso time realizar a magia.</p>
+      <a class="secondary-link" href="/acompanhar-pedido">🔎 Acompanhar meu pedido</a>
     </section>
 
-    <form action="/api/novo-pedido" method="post" enctype="multipart/form-data" class="card">
+    <form id="form-pedido" action="/api/novo-pedido" method="post" enctype="multipart/form-data" class="card">
       <h2>Formulário de Pedido</h2>
 
       <div class="grid">
@@ -58,7 +59,35 @@
       </label>
 
       <button type="submit">✨ Enviar Pedido ✨</button>
+      <p id="resultado-pedido" class="resultado-status" hidden aria-live="polite"></p>
     </form>
   </main>
+
+  <script>
+    document.getElementById('form-pedido').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formulario = event.currentTarget;
+      const resultado = document.getElementById('resultado-pedido');
+      const botao = formulario.querySelector('button[type="submit"]');
+      botao.disabled = true;
+      resultado.hidden = false;
+      resultado.textContent = 'Enviando pedido...';
+
+      try {
+        const resposta = await fetch(formulario.action, {
+          method: 'POST',
+          body: new FormData(formulario)
+        });
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.detail || 'Não foi possível enviar o pedido.');
+        resultado.innerHTML = `✅ ${dados.mensagem}<br>Guarde o número <strong>#${dados.id_pedido}</strong>. <a href="/acompanhar-pedido?pedido=${dados.id_pedido}">Acompanhar status</a>`;
+        formulario.reset();
+      } catch (erro) {
+        resultado.textContent = `❌ ${erro.message}`;
+      } finally {
+        botao.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>

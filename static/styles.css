@@ -103,6 +103,27 @@ button:hover {
   box-shadow: 0 8px 20px rgba(255, 165, 0, 0.5);
 }
 
+.danger-button {
+  background: #c0392b;
+  color: #ffffff;
+  margin-left: 8px;
+}
+
+.danger-button:hover {
+  background: #a93226;
+  box-shadow: 0 8px 20px rgba(192, 57, 43, 0.35);
+}
+
+.resultado-status {
+  margin: 20px 0 0;
+  padding: 16px;
+  border-radius: 10px;
+  background: #fff4df;
+  color: #001a4d;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
 .secondary-link {
   color: #FFB84D;
   font-weight: bold;
