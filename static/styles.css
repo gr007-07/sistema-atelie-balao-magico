@@ -1,0 +1,254 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #001a4d 0%, #002d7a 100%);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  background: rgba(255, 165, 0, 0.05);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 165, 0, 0.2);
+}
+
+.hero h1 {
+  font-size: 2.5em;
+  margin: 0 0 16px 0;
+  color: #FFB84D;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero p {
+  font-size: 1.1em;
+  margin: 0 0 20px 0;
+  color: #e0e0e0;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  color: #001a4d;
+}
+
+.card h2 {
+  color: #001a4d;
+  margin-top: 0;
+  border-bottom: 3px solid #FFB84D;
+  padding-bottom: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #001a4d;
+}
+
+input, textarea, select {
+  border: 2px solid #FFB84D;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1rem;
+  background: #ffffff;
+  color: #001a4d;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #FFA500;
+  box-shadow: 0 0 8px rgba(255, 165, 0, 0.3);
+}
+
+button {
+  background: linear-gradient(135deg, #FFB84D, #FFA500);
+  color: #001a4d;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 5px 15px rgba(255, 165, 0, 0.3);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 165, 0, 0.5);
+}
+
+.secondary-link {
+  color: #FFB84D;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 20px;
+  border: 2px solid #FFB84D;
+  border-radius: 10px;
+}
+
+.secondary-link:hover {
+  color: #001a4d;
+  background: #FFB84D;
+}
+
+.pedido-lista {
+  display: grid;
+  gap: 16px;
+}
+
+.pedido-card {
+  border: 2px solid #FFB84D;
+  border-radius: 14px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #001a4d;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pedido-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 165, 0, 0.2);
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #FFB84D;
+}
+
+.pedido-header h3 {
+  margin: 0;
+  color: #001a4d;
+}
+
+.status-badge {
+  background: linear-gradient(135deg, #FFB84D, #FFA500);
+  color: #001a4d;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.pedido-card p {
+  margin: 8px 0;
+  color: #334;
+}
+
+.pedido-card select {
+  color: #001a4d;
+  margin-top: 10px;
+}
+
+.fotos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 12px 0;
+  border-top: 1px solid #FFB84D;
+  border-bottom: 1px solid #FFB84D;
+}
+
+.fotos img {
+  max-width: 160px;
+  max-height: 160px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.fotos img:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2em;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
+
+.pedido-lista {
+  display: grid;
+  gap: 16px;
+}
+
+.pedido-card {
+  border: 1px solid #f0d7e2;
+  border-radius: 14px;
+  padding: 16px;
+  background: #fffafc;
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-badge {
+  background: #f5d7e2;
+  color: #8f3558;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.fotos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.fotos img {
+  max-width: 160px;
+  border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Criativa</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto;
+    }
+    .login-form {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+    .login-form h2 {
+      text-align: center;
+      color: #001a4d;
+      margin-top: 0;
+    }
+    .error {
+      background: #ffebee;
+      color: #c62828;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <form method="post" action="/api/login" class="login-form">
+      <h2>🔐 Acesso do Operador</h2>
+      <div class="error" id="erro"></div>
+      
+      <label style="color: #001a4d;">
+        Senha de Operador
+        <input type="password" name="senha" placeholder="Digite a senha" required />
+      </label>
+
+      <button type="submit">✨ Acessar Painel ✨</button>
+      
+      <p style="text-align: center; color: #666; margin-top: 20px; font-size: 0.9em;">
+        <a href="/" style="color: #FFB84D;">Voltar ao site do cliente</a>
+      </p>
+    </form>
+  </div>
+
+  <script>
+    // Verificar se há mensagem de erro na URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('erro')) {
+      document.getElementById('erro').textContent = 'Senha incorreta!';
+      document.getElementById('erro').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

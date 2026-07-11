@@ -1,12 +1,12 @@
-# 🎈 Sistema Ateliê Balão Mágico
+# ✨ Sistema Criativa
 
-Bem-vindo ao repositório do **Ateliê Balão Mágico**! 
+Bem-vindo ao repositório da **Criativa - Loja dos Personalizados**! 
 Este projeto foi desenvolvido para modernizar o gerenciamento de clientes e pedidos de artigos personalizados para festas.
 
 O projeto é dividido em duas partes independentes para atender diferentes necessidades do negócio:
 
 1. **Terminal Interno (CLI):** Um sistema rápido via terminal para uso no balcão da loja, focado no cadastro ágil de clientes e detalhamento de pedidos.
-2. **API Web (FastAPI):** Uma interface moderna e documentada, pronta para ser conectada ao site oficial do ateliê ou a um aplicativo de clientes.
+2. **API Web (FastAPI):** Uma interface moderna e documentada, pronta para ser conectada ao site oficial da Criativa ou a um aplicativo de clientes.
 
 ## 🛠️ Tecnologias Utilizadas
 * **Linguagem:** Python
@@ -22,4 +22,79 @@ Certifique-se de ter o MySQL (ou pacotes como XAMPP/WAMP) rodando. Crie um banco
 ### 2. Instalando as dependências
 Abra o terminal na pasta do projeto e instale as bibliotecas necessárias:
 ```bash
-pip install fastapi uvicorn mysql-connector-python pydantic
+pip install -r requirements.txt
+```
+
+### 3. Iniciando a aplicação Web
+```bash
+uvicorn api_atelie:app --host 127.0.0.1 --port 8010
+```
+Acesse em seu navegador: `http://127.0.0.1:8010`
+
+### 4. Usando o sistema CLI (opcional)
+```bash
+python "script python.py"
+```
+
+## 📱 Usando a aplicação
+
+### 👤 Para o Cliente
+- Acesse a página inicial
+- Preencha os dados do pedido
+- Anexe fotos de referência (opcional)
+- Clique em "Enviar Pedido"
+
+### 👨‍💼 Para o Operador
+- Acesse `/login` na aplicação web
+- Digite a senha: `criativa123`
+- Visualize todos os pedidos
+- Atualize o status de cada pedido em tempo real
+
+## 🔐 Segurança
+
+- A página do operador está protegida por autenticação
+- Senhas são validadas via sessão com cookie seguro (24 horas)
+- Para alterar a senha, edite a variável `SENHA_OPERADOR` em `api_atelie.py`
+
+## 📁 Estrutura do projeto
+
+```
+sistema-atelie-balao-magico/
+├── api_atelie.py          # API principal (FastAPI)
+├── conexao_banco.py       # Configuração de banco de dados
+├── script python.py       # Interface CLI
+├── pedido_models.py       # Modelos de dados
+├── requirements.txt       # Dependências do projeto
+├── README.md              # Este arquivo
+├── templates/             # Templates HTML
+│   ├── index.html        # Página do cliente
+│   ├── operador.html     # Painel do operador
+│   └── login.html        # Página de login
+├── static/               # Arquivos estáticos
+│   └── styles.css        # Estilos da aplicação
+├── uploads/              # Pasta para fotos anexadas
+└── tests/                # Testes unitários
+    └── test_pedido.py
+```
+
+## 🚢 Publicando a aplicação
+
+A aplicação está pronta para ser publicada em plataformas como:
+- **Render**: render.com (recomendado)
+- **PythonAnywhere**: pythonanywhere.com
+- **Railway**: railway.app
+- **DigitalOcean**: digitalocean.com
+
+### Passos para publicar no Render:
+1. Faça push do código para o GitHub
+2. Acesse render.com e conecte seu repositório
+3. Configure o comando de start:
+   ```
+   uvicorn api_atelie:app --host 0.0.0.0 --port 8000
+   ```
+4. Deploy automático! 🎉
+
+## 📝 Notas
+- O arquivo `requirements.txt` contém todas as dependências necessárias
+- Certifique-se de configurar a senha do operador em produção
+- Em produção, altere `secure=False` para `secure=True` na configuração de cookies (requer HTTPS)

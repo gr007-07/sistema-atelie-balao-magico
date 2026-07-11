@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criativa - Faça seu Pedido</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>✨ Criativa - Loja dos Personalizados ✨</h1>
+      <p>Crie o pedido perfeito para sua festa! Envie referências e detalhes para o nosso time realizar a magia.</p>
+    </section>
+
+    <form action="/api/novo-pedido" method="post" enctype="multipart/form-data" class="card">
+      <h2>Formulário de Pedido</h2>
+
+      <div class="grid">
+        <label>👤 Nome do cliente
+          <input type="text" name="nome_cliente" placeholder="Seu nome completo" required />
+        </label>
+        <label>📱 Telefone (WhatsApp)
+          <input type="text" name="telefone" placeholder="(11) 99999-9999" required />
+        </label>
+        <label>📧 E-mail
+          <input type="email" name="email" placeholder="seu@email.com" required />
+        </label>
+        <label>🎉 Data da festa
+          <input type="date" name="data_festa" required />
+        </label>
+        <label>📦 Data de entrega
+          <input type="date" name="data_entrega" required />
+        </label>
+        <label>🎨 Tema da festa
+          <input type="text" name="tema" placeholder="Ex: Frozen, Mundo Bita..." required />
+        </label>
+        <label>🌈 Cores principais
+          <input type="text" name="cores" placeholder="Ex: Azul e branco" required />
+        </label>
+        <label>🎂 Nome do aniversariante
+          <input type="text" name="nome_aniv" placeholder="Nome da criança" required />
+        </label>
+        <label>🎈 Idade
+          <input type="number" name="idade" placeholder="Quantos anos?" required />
+        </label>
+        <label>⚖️ Tamanho do bolo (kg)
+          <input type="number" step="0.1" name="tamanho_bolo" placeholder="Ex: 1.5" required />
+        </label>
+      </div>
+
+      <label>💭 Observações (opcional)
+        <textarea name="observacoes" rows="4" placeholder="Conte detalhes especiais, preferências ou restrições alimentares..."></textarea>
+      </label>
+
+      <label>📸 Anexar fotos de exemplo (opcional)
+        <input type="file" name="arquivos" multiple accept="image/*" />
+      </label>
+
+      <button type="submit">✨ Enviar Pedido ✨</button>
+    </form>
+  </main>
+</body>
+</html>
