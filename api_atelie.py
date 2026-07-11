@@ -20,8 +20,9 @@ UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 # Configuração de segurança simples
-SENHA_OPERADOR = "criativa123"  # Altere em produção
+SENHA_OPERADOR = os.getenv("SENHA_OPERADOR", "criativa123")
 SESSAO_TIMEOUT = 24  # Horas
+COOKIE_SECURE = os.getenv("COOKIE_SECURE", "false").lower() == "true"
 
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
@@ -72,7 +73,7 @@ async def login_operador(senha: str = Form(...)):
         value="true",
         max_age=SESSAO_TIMEOUT * 3600,
         httponly=True,
-        secure=False  # Mude para True em produção (HTTPS)
+        secure=COOKIE_SECURE,
     )
     return response
 
