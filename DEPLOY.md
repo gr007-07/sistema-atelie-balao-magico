@@ -120,6 +120,24 @@ R: Sim! Configure um domínio personalizado nas settings da plataforma.
 ## 🆘 Precisa de ajuda?
 
 Se encontrar problemas no deployment, verifique:
+
+### ❌ Erro: "syntax error near unexpected token"
+Este erro acontece quando você usa código Python no Start Command:
+
+```bash
+# ❌ ERRADO (Python code):
+uvicorn.run(app, host="127.0.0.1", port=8000)
+
+# ✅ CERTO (Shell command):
+uvicorn api_atelie:app --host 0.0.0.0 --port 8000
+```
+
+**Solução Render:**
+1. Vá para Project Settings
+2. Em "Start Command", altere para: `uvicorn api_atelie:app --host 0.0.0.0 --port 8000`
+3. Clique "Save" e "Manual Deploy" → "Deploy latest commit"
+
+### Outras verificações:
 1. Logs da plataforma (eles mostram o erro)
 2. Certifique-se que `api_atelie.py` está na raiz do repositório
 3. Verifique se todas as dependências estão em `requirements.txt`
