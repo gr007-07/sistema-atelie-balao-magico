@@ -90,7 +90,7 @@ A aplicação está pronta para ser publicada em plataformas como:
 2. Acesse render.com e conecte seu repositório
 3. Configure o comando de start:
    ```
-   uvicorn api_atelie:app --host 0.0.0.0 --port 8000
+   uvicorn api_atelie:app --host 0.0.0.0 --port $PORT
    ```
 4. Deploy automático! 🎉
 

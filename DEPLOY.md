@@ -22,7 +22,7 @@ Este documento explica como publicar a aplicação Criativa em uma plataforma on
    - **Name**: criativa-app
    - **Environment**: Python 3
    - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn api_atelie:app --host 0.0.0.0 --port 8000`
+   - **Start Command**: `uvicorn api_atelie:app --host 0.0.0.0 --port $PORT`
 
 ### Passo 3: Configurar variáveis (opcional)
 Se precisar de variáveis de ambiente (como senha customizada):
@@ -129,12 +129,12 @@ Este erro acontece quando você usa código Python no Start Command:
 uvicorn.run(app, host="127.0.0.1", port=8000)
 
 # ✅ CERTO (Shell command):
-uvicorn api_atelie:app --host 0.0.0.0 --port 8000
+uvicorn api_atelie:app --host 0.0.0.0 --port $PORT
 ```
 
 **Solução Render:**
 1. Vá para Project Settings
-2. Em "Start Command", altere para: `uvicorn api_atelie:app --host 0.0.0.0 --port 8000`
+2. Em "Start Command", altere para: `uvicorn api_atelie:app --host 0.0.0.0 --port $PORT`
 3. Clique "Save" e "Manual Deploy" → "Deploy latest commit"
 
 ### Outras verificações:
